@@ -19,7 +19,7 @@ Proyecto WebSocket con laravel Reverb en un virtual host en xampp por `https`.
 > [!NOTE]
 > Hay que tener instalado `Openssl` que suele estar en `C:\xampp\apache\bin` podemos usar una carpeta si la creamos debemos trabajar esta parte dentro de la carpeta.
 
-> [!INFO]
+> [!CAUTION]
 > El nombre de dominio tiene que ser el que vayamos a usar en este caso he usado `broadcasting.local`.
 
 ### Crear una root key
@@ -34,7 +34,7 @@ openssl genrsa -des3 -out localRootCA.key 2048
 
 ### Crear un root certificate
 
-> [!INFO]
+> [!NOTE]
 > Durante este paso utilizaremos la passphrase ingresada al generar la root key.
 
 > Typee: en la Consola:
@@ -47,20 +47,12 @@ openssl req -x509 -new -nodes -key localRootCA.key -sha256 -days 1024 -out local
 
 ## Información del certificado
 
-__Country__ Name (2 letter code) [XX]: Código de país en formato ISO 3166-1 (por ejemplo, "US" para Estados Unidos o "ES" para España).
-
-__State or Province Name__ (full name) []: Nombre completo del estado o provincia.
-
-__Locality Name__ (eg, city) []: Nombre de la ciudad o localidad.
-
-__Organization Name__ (eg, company) [Default Company Ltd]: Nombre de la organización o empresa.
-
-__Organizational Unit Name__ (eg, section) []: Nombre de la unidad organizativa dentro de la empresa.
-
-<ins>__Common Name__</ins> (e.g. server FQDN or YOUR name) []: Nombre común del certificado, normalmente el dominio del sitio web (por ejemplo, example.com).
-
-__Email Address__ []: Dirección de correo electrónico del administrador del certificado.
-
-__A challenge password__ []: (Opcional) Contraseña para proteger el certificado.
-
-__An optional company name__ []: (Opcional) Nombre alternativo de la empresa.
+__Country__ Name (2 letter code) [XX]: _Código de país en formato ISO 3166-1 (por ejemplo, "US" para Estados Unidos o "ES" para España)._
+__State or Province Name__ (full name) []: _Nombre completo del estado o provincia._
+__Locality Name__ (eg, city) []: _Nombre de la ciudad o localidad._
+__Organization Name__ (eg, company) [Default Company Ltd]: _Nombre de la organización o empresa._
+__Organizational Unit Name__ (eg, section) []: _Nombre de la unidad organizativa dentro de la empresa._
+<ins>__Common Name__</ins> (e.g. server FQDN or YOUR name) []: _Nombre común del certificado, normalmente el dominio del sitio web (por ejemplo, example.com)._
+__Email Address__ []: _Dirección de correo electrónico del administrador del certificado._
+__A challenge password__ []: (Opcional) _Contraseña para proteger el certificado._
+__An optional company name__ []: (Opcional) _Nombre alternativo de la empresa._
