@@ -428,7 +428,7 @@ REVERB_SSL_CERT="C:/xampp/apache/conf/ssl.crt/broadcasting.local.crt"
 REVERB_SSL_KEY="C:/xampp/apache/conf/ssl.key/broadcasting.local.key"
 ```
 
-> [!IMPORTANTE]
+> [!IMPORTANT]
 > No te olvides de configurar la base de datos.
 
 > Pues con esta configuración ya lo tendríamos todo preparado. 👍
