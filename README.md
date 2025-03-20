@@ -36,6 +36,8 @@ openssl genrsa -des3 -out localRootCA.key 2048
 > [!IMPORTANT]
 > Para este paso deberemos elegir y recordar una passphrase o contraseña.
 
+[Ir al Indice de Contenidos...](#indice-de-contenidos) :top:
+
 ### Crear un root certificate
 
 > [!NOTE]
@@ -49,6 +51,8 @@ openssl req -x509 -new -nodes -key localRootCA.key -sha256 -days 1024 -out local
 > [!IMPORTANT]
 > Se pueden contestar las preguntas que aparecen en este paso con un punto o un espacio en blanco, sin embargo cuando nos soliciten el **Common Name** debemos ingresar el nombre del dominio o virtual host en este caso es `broadcasting.local`, si quiere puede contestar las preguntas para el certificado mira en el siguiente enlace [Información del certificado](#información-del-certificado). 
 
+[Ir al Indice de Contenidos...](#indice-de-contenidos) :top:
+
 ### Pedido de firma de certificado
 
 > [!NOTE]
@@ -61,6 +65,8 @@ openssl req -x509 -new -nodes -key localRootCA.key -sha256 -days 1024 -out local
 ```console
 openssl req -new -nodes -out broadcasting.local.csr -newkey rsa:2048 -keyout broadcasting.local.key
 ```
+
+[Ir al Indice de Contenidos...](#indice-de-contenidos) :top:
 
 ### Certificado SSL
 
@@ -89,7 +95,7 @@ openssl x509 -req -in broadcasting.local.csr -CA localRootCA.pem -CAkey localRoo
 
 > Pues ya tendríamos un certificado para nuestro virtual host en local. 👍
 
-[Ir al Indice de Contenidos...](#indice-de-contenidos). :top:
+[Ir al Indice de Contenidos...](#indice-de-contenidos) :top:
 
 ## Información del certificado
 
