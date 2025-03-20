@@ -20,6 +20,7 @@ Proyecto WebSocket con laravel Reverb en un virtual host en xampp por `https`.
     -   [Añadir certificados SSL](#añadir-certificados-ssl)
     -   [Virtual Host](#virtual-host)
     -   [Redirigir al host](#redirigir-al-host)
+-   [Agregar Certificados SSL](#agregar-certificados-ssl)
 -   [Instalación y configuración laravel reverb](#instalación-y-configuración-laravel-reverb)
 
 ## Crear certificados
@@ -250,5 +251,35 @@ SSLCertificateKeyFile "conf/ssl.key/broadcasting.local.key"
 ```text
 127.0.0.1   broadcasting.local
 ```
+
+[Ir al Indice de Contenidos...](#indice-de-contenidos) :top:
+
+## Agregar Certificados SSL
+
+> [!NOTE]
+> Vamos a agregar los certificados al navegador y a windows.
+
+Firefox: Abrimos el navegador y pegamos:
+
+```text
+about:preferences#privacy
+```
+
+> [!IMPORTANT]
+> No dirigimos a la sección `Certificados` y presionamos el botón `Ver certificados` y en la pestaña `Autoridades` le damos al botón `Importar` seleccionamos el archivo `localRootCA.pem` que hemos creado.
+
+Chrome: Abrimos el navegador y pegamos:
+
+```text
+chrome://certificate-manager/
+```
+
+> [!IMPORTANT]
+> Presionamos el botón `Gestionar certificados importados desde Windows` se abrirá una ventana y le damos al botón `Importar` luego a siguiente  seleccionamos el archivo `localRootCA.pem` que hemos creado y a siguiente marcamos la casilla `Colocar todos los certificados en el siguiente almacén` presionamos el botón `Examinar ...` y seleccionamos `Entidades de certificación raíz de confianza` aceptamos y lo típico siguiente siguiente y finalizar.
+
+Windows:
+
+> [!IMPORTANT]
+> Le damos doble click al archivo `broadcasting.local.crt` presionamos el botón `Instalar certificado` seleccionamos la casilla `Equipo local` siguiente nos pedirá que confirmemos que haga cambios le damos a si y marcamos la casilla `Colocar todos los certificados en el siguiente almacén` presionamos el botón `Examinar ...` y seleccionamos `Entidades de certificación raíz de confianza` aceptamos y lo típico siguiente siguiente y finalizar.
 
 [Ir al Indice de Contenidos...](#indice-de-contenidos) :top:
