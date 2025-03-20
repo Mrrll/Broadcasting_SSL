@@ -14,14 +14,18 @@ Proyecto WebSocket con laravel Reverb en un virtual host en xampp por `https`.
     -   [Crear un root certificate](#crear-un-root-certificate)
     -   [Pedido de firma de certificado](#pedido-de-firma-de-certificado)
     -   [Certificado SSL](#certificado-ssl)
--   [Configurar Apache en Xampp](#configurar-apache-en-xampp)
--   [Instalación y configuración laravel reverb](#instalación-y-configuración-laravel-reverb)
 -   [Información del certificado](#información-del-certificado)
+-   [Configurar Apache en Xampp](#configurar-apache-en-xampp)
+    -   [Habilitar módulos](#habilitar-módulos)
+    -   [Añadir certificados SSL](#añadir-certificados-ssl)
+    -   [Virtual Host](#virtual-host)
+    -   [Redirigir al host](#redirigir-al-host)
+-   [Instalación y configuración laravel reverb](#instalación-y-configuración-laravel-reverb)
 
 ## Crear certificados
 
 > [!NOTE]
-> Hay que tener instalado `Openssl` que suele estar en `C:\xampp\apache\bin` podemos usar una carpeta si la creamos debemos trabajar esta parte dentro de la carpeta.
+> Hay que tener instalado `Openssl` que suele estar en `C:\xampp\apache\bin` podemos usar una carpeta si la creamos debemos trabajar esta parte dentro de la carpeta en este caso he creado una carpeta :file_folder: llamada `certs` en la raíz del proyecto .
 
 > [!CAUTION]
 > El nombre de dominio tiene que ser el que vayamos a usar en este caso he usado `broadcasting.local`.
@@ -116,3 +120,135 @@ __Email Address__ []: _Dirección de correo electrónico del administrador del c
 __A challenge password__ []: (Opcional) _Contraseña para proteger el certificado._
 
 __An optional company name__ []: (Opcional) _Nombre alternativo de la empresa._
+
+[Ir al Indice de Contenidos...](#indice-de-contenidos) :top:
+
+## Configurar Apache en Xampp
+
+> [!TIP]
+> Lo primero de todo vamos a copiar los archivos de los certificados que acabamos de crear en las carpetas correspondientes de Xampp, Solo para tener ordenados nuestros archivos y no tener que ir cambiado rutas pero podemos de omitir este paso.
+
+> [!NOTE]
+> En este caso los archivos de los certificados los tengo en la carpeta `certs` en la raíz del proyecto, cambia las rutas por la tuyas y los nombres de los archivos.
+
+> Typee: en la Consola:
+
+PowerShell
+
+```console
+Copy-Item "C:\xampp\htdocs\broadcasting\certs\broadcasting.local.crt" -Destination "C:\xampp\apache\conf\ssl.crt\"
+```
+```console
+Copy-Item "C:\xampp\htdocs\broadcasting\certs\broadcasting.local.key" -Destination "C:\xampp\apache\conf\ssl.key\"
+```
+(Opcional)
+```console
+Copy-Item "C:\xampp\htdocs\broadcasting\certs\broadcasting.local.csr" -Destination "C:\xampp\apache\conf\ssl.csr\"
+```
+
+CMD (Símbolo del sistema)
+
+```console
+copy "C:\xampp\htdocs\broadcasting\certs\broadcasting.local.crt" "C:\xampp\apache\conf\ssl.crt\"
+```
+```console
+copy "C:\xampp\htdocs\broadcasting\certs\broadcasting.local.key" "C:\xampp\apache\conf\ssl.key\"
+```
+(Opcional)
+```console
+copy "C:\xampp\htdocs\broadcasting\certs\broadcasting.local.csr" "C:\xampp\apache\conf\ssl.csr\"
+```
+
+[Ir al Indice de Contenidos...](#indice-de-contenidos) :top:
+
+> [!TIP]
+> Es recomendable abrir los archivos en `Ejecutar como administrador`.
+
+### Habilitar módulos
+
+> [!NOTE]
+> Abre el archivo __httpd.conf__ de Apache (ubicado en `C:\xampp\apache\conf\httpd.conf`) y asegúrate de tener descomentadas (sin el “#”) las siguientes líneas:
+
+```text
+LoadModule proxy_module modules/mod_proxy.so
+LoadModule proxy_http_module modules/mod_proxy_http.so
+LoadModule proxy_wstunnel_module modules/mod_proxy_wstunnel.so
+```
+
+[Ir al Indice de Contenidos...](#indice-de-contenidos) :top:
+
+### Añadir certificados SSL
+
+> [!NOTE]
+> Abre el archivo __httpd-ssl.conf__ de Apache (ubicado en `C:\xampp\apache\conf\extra\httpd-ssl.conf`) y buscamos `SSLCertificateFile` veremos que hay varias líneas que ponen `SSLCertificateFile "conf/ssl.crt/server.crt"` hay unas que están comentadas con (“#”) o podemos descomentar y modificarla o podemos añadir debajo:
+
+> [!TIP]
+> Podemos tener tantos certificados como necesitemos.
+
+```text
+SSLCertificateFile "conf/ssl.crt/broadcasting.local.crt"
+```
+
+También buscaremos `SSLCertificateKeyFile` y haremos lo mismo pero con la key.
+
+```text
+SSLCertificateKeyFile "conf/ssl.key/broadcasting.local.key"
+```
+
+> [!IMPORTANT]
+> Recuerda que si has omitido el paso de copiar los archivos a las carpetas correspondientes deberás de cambiar las rutas por las tuyas y el nombre del archivo.
+
+[Ir al Indice de Contenidos...](#indice-de-contenidos) :top:
+
+### Virtual Host
+
+> [!NOTE]
+> Abre el archivo __httpd-vhost.conf__ de Apache (ubicado en `C:\xampp\apache\conf\extra\httpd-vhost.conf`) y añadimos lo siguiente:
+
+```text
+<VirtualHost *:80>
+    DocumentRoot "C:/xampp/htdocs/broadcasting/public"
+    ServerName broadcasting.local
+    <Directory "C:/xampp/htdocs/broadcasting/public">
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+
+<VirtualHost *:443>
+    DocumentRoot "C:/xampp/htdocs/broadcasting/public"
+    ServerName broadcasting.local
+    SSLEngine on
+    SSLCertificateFile "C:/xampp/apache/conf/ssl.crt/broadcasting.local.crt"
+    SSLCertificateKeyFile "C:/xampp/apache/conf/ssl.key/broadcasting.local.key"
+    # Habilita el proxy y la traducción de encabezados
+    ProxyPreserveHost On
+    SSLProxyEngine On
+    # Proxy para WebSockets
+    <Location /app>
+         ProxyPass "ws://127.0.0.1:6001/app"
+         ProxyPassReverse "ws://127.0.0.1:6001/app"
+    </Location>
+    <Directory "C:/xampp/htdocs/broadcasting/public">
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+```
+
+> [!IMPORTANT]
+> Hay que tener en cuenta el nombre del dominio, la ruta del proyecto, las rutas de los certificados y la ruta del `websocket` y su puerto en este proyecto vamos a utilizar el puerto `6001`.
+
+[Ir al Indice de Contenidos...](#indice-de-contenidos) :top:
+
+### Redirigir al host
+
+> [!NOTE]
+> Abre el archivo __hosts__ de Windows (ubicado en `C:\Windows\System32\drivers\etc\hosts`) y añadimos lo siguiente:
+
+```text
+127.0.0.1   broadcasting.local
+```
+
+[Ir al Indice de Contenidos...](#indice-de-contenidos) :top:
